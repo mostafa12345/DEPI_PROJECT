@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     // Deploy the application using docker-compose
-                    sh 'docker-compose up -d'
+                    echo "Deploy the application using ansible"
                 }
             }
         }
