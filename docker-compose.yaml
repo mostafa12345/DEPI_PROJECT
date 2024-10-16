@@ -2,6 +2,7 @@ version: '3'
 services:
   my-app:
     build: .
+    image: mostafataha12/my-app:latest
     ports:
     - 3000:3000
   mongodb:
