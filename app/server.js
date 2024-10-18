@@ -83,5 +83,5 @@ app.get('/get-profile', function (req, res) {
 });
 
 app.listen(port, function () {
-  console.log(`Application is running on http://localhost:${port}`);
+  console.log(`Application is running on http://107.23.176.76:${port}`);
 });
