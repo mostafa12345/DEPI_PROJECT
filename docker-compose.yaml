@@ -5,6 +5,8 @@ services:
     image: mostafataha12/my-app:latest
     ports:
     - 3000:3000
+    depends_on:
+      - "db-init"
   mongodb:
     image: mongo
     ports:
