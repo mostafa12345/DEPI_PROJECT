@@ -33,13 +33,6 @@
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
-    # Install AWS CLI
-    - name: Install AWS CLI
-      yum:
-        name: aws-cli
-        update_cache: yes
-        state: present
-
 - name: Copy Application and Docker Compose File to EC2
   hosts: docker_server
   become: yes
