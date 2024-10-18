@@ -1,0 +1,2 @@
+[docker_server]
+35.153.184.139 ansible_user=ec2-user ansible_python_interpreter=/usr/bin/python3.9
