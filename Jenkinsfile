@@ -44,9 +44,9 @@ pipeline {
                             --private-key $SSH_KEY_PATH \
                             playbook.yml
                         '''
+                    }
                 }
             }
         }
-
     }
 }
