@@ -36,8 +36,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Deploy the application using docker-compose
-                    echo "Deploy the application using ansible"
+                    // Inject the SSH private key from Jenkins credentials
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USER')]) {
+                        // Use the injected private key to run the Ansible playbook
+                        sh '''
+                            ansible-playbook -i inventory \
+                            --private-key $SSH_KEY_PATH \
+                            playbook.yml
+                        '''
                 }
             }
         }
