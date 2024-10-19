@@ -1,2 +1,2 @@
 [docker_server]
-44.208.28.25 ansible_user=ec2-user ansible_python_interpreter=/usr/bin/python3
+44.210.122.127 ansible_user=ec2-user ansible_python_interpreter=/usr/bin/python3
