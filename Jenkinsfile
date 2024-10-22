@@ -26,9 +26,14 @@ pipeline {
         stage('Fetch EC2 Public IP') {
             steps {
                 script {
-                    // Fetch the public IP from Terraform output
-                    env.EC2_PUBLIC_IP = sh(script: 'terraform output -raw ec2_public_ip', returnStdout: true).trim()
-                    echo "EC2 Public IP: ${env.EC2_PUBLIC_IP}"
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding', 
+                        credentialsId: 'aws-credentials'
+                    ]]) {
+                        // Fetch the public IP from Terraform output
+                        env.EC2_PUBLIC_IP = sh(script: 'terraform output -raw ec2_public_ip', returnStdout: true).trim()
+                        echo "EC2 Public IP: ${env.EC2_PUBLIC_IP}"
+                    }
                 }
             }
         }
