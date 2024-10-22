@@ -111,19 +111,26 @@ resource "aws_instance" "ec2_instance1" {
   }
 }
 
+# Data source to fetch existing Elastic IP
+data "aws_eip" "existing_eip" {
+  public_ip = "174.129.40.107"  # Replace with your Elastic IP address
+}
 
+# Create the EC2 instance
 resource "aws_instance" "ec2_instance2" {
-  ami           = "ami-0a3c3a20c09d6f377" 
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.public_subnet2.id
-  security_groups = [aws_security_group.my_sg.id]
-  associate_public_ip_address = true
-  key_name               = "test"
+  ami                    = "ami-0a3c3a20c09d6f377" 
+  instance_type         = "t2.micro"
+  subnet_id             = aws_subnet.public_subnet2.id
+  security_groups       = [aws_security_group.my_sg.id]
+  associate_public_ip_address = false  # Set to false because we'll use the Elastic IP
 
   tags = {
     Name = "ec2_instance2"
   }
 }
-output "ec2_public_ip" {
-  value = aws_instance.ec2_instance2.public_ip
+
+# Associate the existing Elastic IP with the EC2 instance
+resource "aws_eip_association" "eip_association" {
+  instance_id   = aws_instance.ec2_instance2.id
+  allocation_id  = data.aws_eip.existing_eip.id
 }
