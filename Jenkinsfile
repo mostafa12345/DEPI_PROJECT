@@ -45,10 +45,18 @@ pipeline {
             }
         }
 
-        stage('Approval') {
+        stage('Destroy Infrastructure') {
             steps {
                 script {
-                    input message: 'Do you want to proceed with deployment?', ok: 'Deploy'
+                    input message: 'Do you want to destroy the infrastructure?', ok: 'Destroy'
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding', 
+                        credentialsId: 'aws-credentials'
+                    ]]) {
+                        sh '''
+                            terraform destroy -auto-approve
+                        '''
+                    }
                 }
             }
         }
@@ -67,25 +75,10 @@ pipeline {
             }
         }
 
-        stage('Destroy Infrastructure Approval') {
+        stage('Approval') {
             steps {
                 script {
-                    input message: 'Do you want to destroy the infrastructure?', ok: 'Destroy'
-                }
-            }
-        }
-
-        stage('Destroy Infrastructure') {
-            steps {
-                script {
-                    withCredentials([[
-                        $class: 'AmazonWebServicesCredentialsBinding', 
-                        credentialsId: 'aws-credentials'
-                    ]]) {
-                        sh '''
-                            terraform destroy -auto-approve
-                        '''
-                    }
+                    input message: 'Do you want to proceed with further actions?', ok: 'Proceed'
                 }
             }
         }
