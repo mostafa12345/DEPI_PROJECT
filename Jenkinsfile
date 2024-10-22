@@ -62,21 +62,38 @@ pipeline {
                 }
             }
         }
+
+        stage('Update Inventory and Repository') {
+            steps {
+                script {
+                    // Create the inventory file and update the repository
+                    sh '''
+                        echo "[docker_server]" > inventory
+                        echo "${EC2_PUBLIC_IP}" >> inventory
+                        git config --global user.email "mostafa@gmail.com"
+                        git config --global user.name "mostafa"
+                        git add inventory
+                        git commit -m "Update inventory with new EC2 public IP: ${EC2_PUBLIC_IP}"
+                        git push origin main  # Replace 'main' with your branch name
+                    '''
+                }
+            }
+        }
+
         stage('Deploy with Ansible') {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USER')]) {
                         sh '''
-                           echo "[docker_server]" > inventory
-                           echo "${EC2_PUBLIC_IP}" >> inventory
-                           ansible-playbook -i inventory \
-                           --private-key "$SSH_KEY_PATH" \
-                           playbook.yml
+                            ansible-playbook -i inventory \
+                            --private-key "$SSH_KEY_PATH" \
+                            playbook.yml
                         '''
                     }
                 }
             }
         }
+
         stage('Destroy Infrastructure Approval') {
             steps {
                 script {
@@ -99,4 +116,6 @@ pipeline {
             }
         }
     }
+}
+
 }
