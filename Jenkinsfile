@@ -1,10 +1,26 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
                 script {
                     sh 'docker-compose build'
+                }
+            }
+        }
+        stage('Terraform Init and Apply') {
+            steps {
+                script {
+                  
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding', 
+                        credentialsId: 'aws-credentials'
+                    ]]) {
+                        sh '''
+                            terraform init
+                            terraform apply -auto-approve
+                        '''
+                    }
                 }
             }
         }
@@ -29,12 +45,11 @@ pipeline {
         stage('Approval') {
             steps {
                 script {
-                    // Manual approval step
                     input message: 'Do you want to proceed with deployment?', ok: 'Deploy'
                 }
             }
         }
-        stage('Deploy') {
+        stage('Deploy with Ansible') {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USER')]) {
