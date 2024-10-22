@@ -62,16 +62,15 @@ pipeline {
                 }
             }
         }
-
         stage('Update Inventory and Repository') {
             steps {
                 script {
                     // Create the inventory file and update the repository
                     sh '''
-                        echo "[docker_server]" > inventory
+                        echo "[my_servers]" > inventory
                         echo "${EC2_PUBLIC_IP}" >> inventory
-                        git config --global user.email "mostafa@gmail.com"
-                        git config --global user.name "mostafa"
+                        git config --global user.email "you@example.com"
+                        git config --global user.name "Your Name"
                         git add inventory
                         git commit -m "Update inventory with new EC2 public IP: ${EC2_PUBLIC_IP}"
                         git push origin main  # Replace 'main' with your branch name
@@ -79,7 +78,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy with Ansible') {
             steps {
                 script {
@@ -93,7 +91,6 @@ pipeline {
                 }
             }
         }
-
         stage('Destroy Infrastructure Approval') {
             steps {
                 script {
@@ -116,6 +113,4 @@ pipeline {
             }
         }
     }
-}
-
 }
