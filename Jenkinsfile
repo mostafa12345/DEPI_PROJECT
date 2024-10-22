@@ -67,8 +67,8 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USER')]) {
                         sh '''
-                            ansible-playbook -i "${env.EC2_PUBLIC_IP}," \
-                            --private-key $SSH_KEY_PATH \
+                            ansible-playbook -i "${EC2_PUBLIC_IP}," \
+                            --private-key "$SSH_KEY_PATH" \
                             playbook.yml
                         '''
                     }
