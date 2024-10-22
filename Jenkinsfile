@@ -67,9 +67,11 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USER')]) {
                         sh '''
-                            ansible-playbook -i "${EC2_PUBLIC_IP}," \
-                            --private-key "$SSH_KEY_PATH" \
-                            playbook.yml
+                           echo "[docker_server]" > inventory
+                           echo "${EC2_PUBLIC_IP}" >> inventory
+                           ansible-playbook -i inventory \
+                           --private-key "$SSH_KEY_PATH" \
+                           playbook.yml
                         '''
                     }
                 }
