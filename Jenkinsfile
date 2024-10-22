@@ -11,7 +11,6 @@ pipeline {
         stage('Terraform Init and Apply') {
             steps {
                 script {
-                  
                     withCredentials([[
                         $class: 'AmazonWebServicesCredentialsBinding', 
                         credentialsId: 'aws-credentials'
@@ -57,6 +56,28 @@ pipeline {
                             ansible-playbook -i inventory \
                             --private-key $SSH_KEY_PATH \
                             playbook.yml
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                script {
+                    input message: 'Do you want to Destroy Infrastructure', ok: 'Destroy'
+                }
+            }
+        }
+        stage('Destroy Infrastructure') {
+            steps {
+                script {
+                    withCredentials([[
+                        $class: 'AmazonWebServicesCredentialsBinding', 
+                        credentialsId: 'aws-credentials'
+                    ]]) {
+                        sh '''
+                            terraform destroy -auto-approve
                         '''
                     }
                 }
