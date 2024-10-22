@@ -62,7 +62,7 @@ pipeline {
             }
         }
 
-        stage('Approval') {
+        stage('Destroy') {
             steps {
                 script {
                     input message: 'Do you want to Destroy Infrastructure', ok: 'Destroy'
