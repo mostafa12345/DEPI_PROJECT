@@ -64,39 +64,34 @@ resource "aws_subnet" "public_subnet2" {
 resource "aws_security_group" "my_sg" {
   vpc_id = aws_vpc.my_vpc.id
 
+  # Allow all inbound traffic
   ingress {
-    from_port   = 22
-    to_port     = 22
+    from_port   = 0
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # Alternatively, you can use this rule to allow all protocols (TCP, UDP, ICMP)
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  # Allows all protocols
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
+  # Allow all outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "-1"  # Allows all protocols
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "allow_ssh_http_https"
+    Name = "allow_all_traffic"
   }
 }
-
 
 resource "aws_instance" "ec2_instance1" {
   ami           = "ami-0a3c3a20c09d6f377" 
