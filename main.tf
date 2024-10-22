@@ -103,8 +103,8 @@ resource "aws_instance" "ec2_instance1" {
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.public_subnet1.id
   security_groups = [aws_security_group.my_sg.id]
-
   associate_public_ip_address = true
+  key_name               = "test"
 
   tags = {
     Name = "ec2_instance1"
@@ -117,8 +117,8 @@ resource "aws_instance" "ec2_instance2" {
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.public_subnet2.id
   security_groups = [aws_security_group.my_sg.id]
-
   associate_public_ip_address = true
+  key_name               = "test"
 
   tags = {
     Name = "ec2_instance2"
