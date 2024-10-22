@@ -118,6 +118,7 @@ resource "aws_instance" "ec2_instance2" {
   subnet_id             = aws_subnet.public_subnet2.id
   security_groups       = [aws_security_group.my_sg.id]
   associate_public_ip_address = false  # Set to false because we'll use the Elastic IP
+  key_name               = "test"
 
   tags = {
     Name = "ec2_instance2"
