@@ -16,7 +16,9 @@ pipeline {
                         $class: 'AmazonWebServicesCredentialsBinding', 
                         credentialsId: 'aws-credentials'
                     ]]) {
+                        // Navigate to the terraform folder and run Terraform commands
                         sh '''
+                            cd terraform
                             terraform init
                             terraform apply -auto-approve
                         '''
@@ -57,7 +59,9 @@ pipeline {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY_PATH', usernameVariable: 'SSH_USER')]) {
+                        // Navigate to the ansible folder and run Ansible playbook
                         sh '''
+                            cd ansible
                             ansible-playbook -i inventory \
                             --private-key "$SSH_KEY_PATH" \
                             playbook.yml
@@ -82,7 +86,9 @@ pipeline {
                         $class: 'AmazonWebServicesCredentialsBinding', 
                         credentialsId: 'aws-credentials'
                     ]]) {
+                        // Navigate to the terraform folder and run Terraform destroy
                         sh '''
+                            cd terraform
                             terraform destroy -auto-approve
                         '''
                     }
